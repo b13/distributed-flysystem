@@ -1,0 +1,28 @@
+{
+    "name": "b13/distributed-flysystem",
+    "description": "Syncs files between frontend nodes in a multi-head environment based on PHP League / Flysystem",
+    "type": "typo3-cms-extension",
+    "license": "GPL-2.0-or-later",
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^7.2 || ^8.0",
+        "league/flysystem": "^2.0",
+        "league/flysystem-sftp": "^2.0",
+        "typo3/cms-core": "^9.5 || ^10.0 || ^11.0"
+    },
+    "replace": {
+        "typo3-ter/distributed-flysystem": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "B13\\DistributedFlysystem\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "distributed_flysystem"
+        }
+    }
+}
