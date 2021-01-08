@@ -54,6 +54,7 @@ class FillFileAction
 
     protected function persistFile($targetPath, $contents)
     {
+        GeneralUtility::mkdir_deep(dirname($targetPath));
         GeneralUtility::writeFile($targetPath, $contents);
     }
 
