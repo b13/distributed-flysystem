@@ -1,0 +1,64 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  B13\DistributedFlysystem\:
+    resource: '../Classes/*'
+    exclude: '../Classes/{Domain/Model}'
+
+  B13\DistributedFlysystem\Distributor:
+    tags:
+      - name: event.listener
+        identifier: 'flysystem/add-file'
+        method: 'addFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent
+      - name: event.listener
+        identifier: 'flysystem/update-content'
+        method: 'updateContent'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileContentsSetEvent
+      - name: event.listener
+        identifier: 'flysystem/rename-file'
+        method: 'createFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileCreatedEvent
+      - name: event.listener
+        identifier: 'flysystem/delete-file'
+        method: 'deleteFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileDeletedEvent
+      - name: event.listener
+        identifier: 'flysystem/copy-file'
+        method: 'copyFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileCopiedEvent
+      - name: event.listener
+        identifier: 'flysystem/move-file'
+        method: 'moveFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileMovedEvent
+      - name: event.listener
+        identifier: 'flysystem/rename-file'
+        method: 'renameFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileRenamedEvent
+      - name: event.listener
+        identifier: 'flysystem/replace-file'
+        method: 'replaceFile'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileReplacedEvent
+      - name: event.listener
+        identifier: 'flysystem/move-folder'
+        method: 'moveFolder'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFolderMovedEvent
+      - name: event.listener
+        identifier: 'flysystem/copy-folder'
+        method: 'copyFolder'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFolderCopiedEvent
+      - name: event.listener
+        identifier: 'flysystem/rename-folder'
+        method: 'renameFolder'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFolderRenamedEvent
+      - name: event.listener
+        identifier: 'flysystem/delete-folder'
+        method: 'deleteFolder'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFolderDeletedEvent
+      - name: event.listener
+        identifier: 'flysystem/add-folder'
+        method: 'addFolder'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFolderAddedEvent

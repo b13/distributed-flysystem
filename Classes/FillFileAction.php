@@ -24,6 +24,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FillFileAction
 {
+    /**
+     * @var Connector
+     */
+    protected $connector;
+
+    public function __construct(Connector $connector)
+    {
+        $this->connector = $connector;
+    }
 
     public function pullNonExistentFile(ServerRequestInterface $request): ResponseInterface
     {
@@ -32,9 +41,8 @@ class FillFileAction
         if (file_exists($absoluteFile)) {
             return $this->deliverLocalFile($absoluteFile);
         }
-        $connector = new Connector();
         try {
-            foreach ($connector->getConnections($_SERVER['SERVER_ADDR']) as $fileSystem) {
+            foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $fileSystem) {
                 if (!$fileSystem || !$fileSystem->fileExists($requestedFile)) {
                     continue;
                 }

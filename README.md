@@ -66,6 +66,11 @@ Modify your .htaccess file on each node to activate the "pulling" mechanism:
 	RewriteRule ^.*$ %{ENV:CWD}index.php?eID=flysystem [QSA,L]
 
 
+## Caveats
+
+It is expected that the `rootPath` variable is set to the folder of the public
+directory of TYPO3's installation.
+
 ## License
 
 As TYPO3 Core, _distributed flysystem_ is licensed under GPL2 or later. See the LICENSE file for more details.
