@@ -29,14 +29,15 @@ class FillFileAction
      */
     protected $connector;
 
-    public function __construct(Connector $connector)
+    public function __construct(Connector $connector = null)
     {
-        $this->connector = $connector;
+        $this->connector = $connector ?? GeneralUtility::makeInstance(Connector::class);
     }
 
     public function pullNonExistentFile(ServerRequestInterface $request): ResponseInterface
     {
         $requestedFile = $request->getAttribute('normalizedParams')->getSiteScript();
+        $requestedFile = $this->checkRequestedFileName($requestedFile);
         $absoluteFile = Environment::getPublicPath() . '/' . $requestedFile;
         if (file_exists($absoluteFile)) {
             return $this->deliverLocalFile($absoluteFile);
@@ -72,5 +73,24 @@ class FillFileAction
         $fileContents = file_get_contents($absoluteFile);
         $mimeType = $mimeTypeDetector->detectMimeType($absoluteFile, $fileContents);
         return new Response($fileContents, 200, ['Content-Type' => $mimeType]);
+    }
+
+    /**
+     * Find the actual filename, if versionNumberInFilename === embed is used.
+     *
+     * @param string $originalFileName
+     * @return string
+     */
+    protected function checkRequestedFileName(string $originalFileName): string
+    {
+        $originalBaseFileName = basename($originalFileName);
+        $baseFileName = $originalBaseFileName;
+        if (($GLOBALS['TYPO3_CONF_VARS']['FE']['versionNumberInFilename'] ?? '') === 'embed') {
+            $baseFileName = preg_replace('/^(.+)\.(\d+)\.(php|js|css|png|jpg|gif|gzip)$/', '$1.$3', $originalBaseFileName);
+        }
+        if (!empty($baseFileName) && $baseFileName !== $originalBaseFileName) {
+            return str_replace('/' . $originalBaseFileName, '/' . $baseFileName, $originalFileName);
+        }
+        return $originalFileName;
     }
 }

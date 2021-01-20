@@ -25,6 +25,7 @@ use TYPO3\CMS\Core\Resource\Event\AfterFolderDeletedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderMovedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderRenamedEvent;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 /**
@@ -37,9 +38,9 @@ class Distributor
      */
     protected $connector;
 
-    public function __construct(Connector $connector)
+    public function __construct(Connector $connector = null)
     {
-        $this->connector = $connector;
+        $this->connector = $connector ?? GeneralUtility::makeInstance(Connector::class);
     }
 
     public function addFile(AfterFileAddedEvent $event): void
