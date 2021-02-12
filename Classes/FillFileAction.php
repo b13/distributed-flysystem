@@ -38,7 +38,9 @@ class FillFileAction
     {
         $requestedFile = $request->getAttribute('normalizedParams')->getSiteScript();
         $requestedFile = $this->checkRequestedFileName($requestedFile);
-        [$requestedFile] = explode($requestedFile, '?');
+        if (strpos($requestedFile, '?') !== false) {
+            [$requestedFile] = explode($requestedFile, '?');
+        }
         $absoluteFile = Environment::getPublicPath() . '/' . $requestedFile;
         if (file_exists($absoluteFile)) {
             return $this->deliverLocalFile($absoluteFile);
