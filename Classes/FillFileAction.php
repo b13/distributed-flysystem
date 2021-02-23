@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace B13\DistributedFlysystem;
 
+use League\Flysystem\UnableToRetrieveMetadata;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +48,12 @@ class FillFileAction
                 if (!$fileSystem || !$fileSystem->fileExists($requestedFile)) {
                     continue;
                 }
-                $this->persistFile($absoluteFile, $fileSystem->read($requestedFile));
+                try {
+                    $lastModified = $fileSystem->lastModified($requestedFile);
+                } catch (UnableToRetrieveMetadata $e) {
+                    $lastModified = null;
+                }
+                $this->persistFile($absoluteFile, $fileSystem->read($requestedFile), $lastModified);
                 // Need to be handled as stream, otherwise the file isn't shown (e.g. as image) in the first place.
                 return new Response(
                     $fileSystem->readStream($requestedFile),
@@ -61,10 +67,14 @@ class FillFileAction
         return (new Response)->withStatus(404);
     }
 
-    protected function persistFile($targetPath, $contents)
+    protected function persistFile($targetPath, $contents, $lastModified)
     {
         GeneralUtility::mkdir_deep(dirname($targetPath));
         GeneralUtility::writeFile($targetPath, $contents);
+        // If a last modified is given, try to set this with touch()
+        if (file_exists($targetPath) && $lastModified) {
+            @touch($targetPath, $lastModified);
+        }
     }
 
     protected function deliverLocalFile(string $absoluteFile): ResponseInterface
@@ -76,16 +86,20 @@ class FillFileAction
     }
 
     /**
-     * Find the actual filename, if versionNumberInFilename === embed is used.
+     * Find the actual filename, if versionNumberInFilename === embed or querystring is used.
      *
      * @param string $originalFileName
      * @return string
      */
     protected function checkRequestedFileName(string $originalFileName): string
     {
+        // Remove a possible query string
+        if (strpos($originalFileName, '?') !== false) {
+            [$originalFileName] = explode('?', $originalFileName);
+        }
         $originalBaseFileName = basename($originalFileName);
         $baseFileName = $originalBaseFileName;
-        if (($GLOBALS['TYPO3_CONF_VARS']['FE']['versionNumberInFilename'] ?? '') === 'embed') {
+        if (($GLOBALS['TYPO3_CONF_VARS']['FE']['versionNumberInFilename'] ?? '') === 'embed' || ($GLOBALS['TYPO3_CONF_VARS']['BE']['versionNumberInFilename'] ?? false) === true) {
             $baseFileName = preg_replace('/^(.+)\.(\d+)\.(php|js|css|png|jpg|gif|gzip)$/', '$1.$3', $originalBaseFileName);
         }
         if (!empty($baseFileName) && $baseFileName !== $originalBaseFileName) {
