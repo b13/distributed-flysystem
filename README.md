@@ -48,6 +48,7 @@ LocalConfiguration for example:
         'nodes' => [
             'node01' => [
                 'host' => '1.2.3.4'
+                'alias' => 'primary'
             ],
             'node02' => [
                 'host' => '1.2.3.5',

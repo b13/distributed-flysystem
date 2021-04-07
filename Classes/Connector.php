@@ -27,7 +27,7 @@ class Connector
     {
         $allConfigurations = $this->getAllConfigurations();
         foreach ($allConfigurations as $nodeName => $configuration) {
-            if ($excludeNode === $configuration['host'] || $excludeNode === $nodeName) {
+            if ($excludeNode === $configuration['host'] || $excludeNode === $nodeName || $excludeNode === ($configuration['alias'] ?? '')) {
                 continue;
             }
 
