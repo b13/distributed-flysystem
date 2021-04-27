@@ -15,15 +15,15 @@ use TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileContentsSetEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileCopiedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileCreatedEvent;
-use TYPO3\CMS\Core\Resource\Event\AfterFileDeletedEvent;
+use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileMovedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileRenamedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileReplacedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderAddedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderCopiedEvent;
-use TYPO3\CMS\Core\Resource\Event\AfterFolderDeletedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderMovedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderRenamedEvent;
+use TYPO3\CMS\Core\Resource\Event\BeforeFolderDeletedEvent;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
@@ -58,7 +58,7 @@ class Distributor
         // @todo: should we do something about this?
     }
 
-    public function deleteFile(AfterFileDeletedEvent $event): void
+    public function deleteFile(BeforeFileDeletedEvent $event): void
     {
         $this->deleteFileFromRemotes($event->getFile());
     }
@@ -116,7 +116,7 @@ class Distributor
         // @todo
     }
 
-    public function deleteFolder(AfterFolderDeletedEvent $event): void
+    public function deleteFolder(BeforeFolderDeletedEvent $event): void
     {
         $folderPath = $event->getFolder()->getPublicUrl();
         foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {

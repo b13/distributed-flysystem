@@ -25,7 +25,7 @@ services:
       - name: event.listener
         identifier: 'flysystem/delete-file'
         method: 'deleteFile'
-        event: TYPO3\CMS\Core\Resource\Event\AfterFileDeletedEvent
+        event: TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent
       - name: event.listener
         identifier: 'flysystem/copy-file'
         method: 'copyFile'
@@ -57,7 +57,7 @@ services:
       - name: event.listener
         identifier: 'flysystem/delete-folder'
         method: 'deleteFolder'
-        event: TYPO3\CMS\Core\Resource\Event\AfterFolderDeletedEvent
+        event: TYPO3\CMS\Core\Resource\Event\BeforeFolderDeletedEvent
       - name: event.listener
         identifier: 'flysystem/add-folder'
         method: 'addFolder'
