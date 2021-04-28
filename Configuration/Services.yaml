@@ -37,7 +37,7 @@ services:
       - name: event.listener
         identifier: 'flysystem/rename-file'
         method: 'renameFile'
-        event: TYPO3\CMS\Core\Resource\Event\AfterFileRenamedEvent
+        event: TYPO3\CMS\Core\Resource\Event\BeforeFileRenamedEvent
       - name: event.listener
         identifier: 'flysystem/replace-file'
         method: 'replaceFile'

@@ -50,8 +50,8 @@ class Connector
                         $configuration['rootPath'],
                         PortableVisibilityConverter::fromArray([
                             'file' => [
-                                'public' => 0662,
-                                'private' => 0662,
+                                'public' => 0664,
+                                'private' => 0664,
                             ],
                             'dir' => [
                                 'public' => 0775,

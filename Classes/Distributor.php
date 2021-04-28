@@ -17,7 +17,7 @@ use TYPO3\CMS\Core\Resource\Event\AfterFileCopiedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileCreatedEvent;
 use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileMovedEvent;
-use TYPO3\CMS\Core\Resource\Event\AfterFileRenamedEvent;
+use TYPO3\CMS\Core\Resource\Event\BeforeFileRenamedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileReplacedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderAddedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderCopiedEvent;
@@ -73,11 +73,11 @@ class Distributor
         $file = $event->getFile();
         $sourceFolder = $event->getOriginalFolder();
         $sourcePath = trim($sourceFolder->getPublicUrl(), '/') . '/' . $file->getName();
-        $newFilePath = $file->getForLocalProcessing(false);
+        $newFilePath = $file->getPublicUrl();
         $this->moveResourceInRemotes($sourcePath, $newFilePath);
     }
 
-    public function renameFile(AfterFileRenamedEvent $event): void
+    public function renameFile(BeforeFileRenamedEvent $event): void
     {
         $file = $event->getFile();
         $folder = trim($file->getParentFolder()->getPublicUrl(), '/') . '/';
@@ -88,12 +88,7 @@ class Distributor
 
     public function replaceFile(AfterFileReplacedEvent $event): void
     {
-        $file = $event->getFile();
-        $newFilePath = $event->getLocalFilePath();
-        $newFilePath = PathUtility::stripPathSitePrefix($newFilePath);
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
-            $connection->write('/' . ltrim($newFilePath, '/'), $file->getContents());
-        }
+        $this->writeFileToRemotes($event->getFile());
     }
 
     public function moveFolder(AfterFolderMovedEvent $event): void
@@ -153,10 +148,6 @@ class Distributor
 
     protected function moveResourceInRemotes(string $from, string $target): void
     {
-        $from = PathUtility::stripPathSitePrefix($from);
-        $from = '/' . ltrim($from, '/');
-        $target = PathUtility::stripPathSitePrefix($target);
-        $target = '/' . ltrim($target, '/');
         foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
             if ($connection->fileExists($from)) {
                 $connection->move($from, $target);
