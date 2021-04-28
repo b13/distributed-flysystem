@@ -88,7 +88,9 @@ class Distributor
 
     public function replaceFile(AfterFileReplacedEvent $event): void
     {
+        $file = $event->getFile();
         $newFilePath = $event->getLocalFilePath();
+        $newFilePath = PathUtility::stripPathSitePrefix($newFilePath);
         foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
             $connection->write('/' . ltrim($newFilePath, '/'), $file->getContents());
         }
