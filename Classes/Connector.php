@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace B13\DistributedFlysystem;
 
 use League\Flysystem\Filesystem;
-use League\Flysystem\PhpseclibV2\SftpAdapter;
-use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
+use League\Flysystem\PhpseclibV3\SftpAdapter;
+use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 class Connector

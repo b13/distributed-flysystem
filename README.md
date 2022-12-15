@@ -15,7 +15,7 @@ some extensions or "compressed" files, some files get generated on e.g. "node 20
 typo3temp/ which aren't available on the other nodes.
 
 In the past, we had NFS to work around this usually, but when NFS is not an option,
-we built a "workaround" extension for this, based on Frank De Jonge's [Flysystem](https://flysystem.thephpleague.com/v2/docs/)
+we built a "workaround" extension for this, based on Frank De Jonge's [Flysystem](https://flysystem.thephpleague.com/v3/docs/)
 abstraction layer.
 
 Every time a file in e.g. `typo3temp` gets accessed, and the file is not available
@@ -55,7 +55,7 @@ LocalConfiguration for example:
                 'username' => 'b14',
             ],
         ],
-    ];    
+    ];
 
 Modify your .htaccess file on each node to activate the "pulling" mechanism:
 
