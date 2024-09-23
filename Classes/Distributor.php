@@ -101,7 +101,7 @@ class Distributor
     {
         $folderPath = $event->getFolder()->getPublicUrl();
         $targetPath = $event->getTargetFolder()->getPublicUrl();
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             $connection->copy($folderPath, $targetPath);
         }
     }
@@ -114,7 +114,7 @@ class Distributor
     public function deleteFolder(BeforeFolderDeletedEvent $event): void
     {
         $folderPath = $event->getFolder()->getPublicUrl();
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             $connection->deleteDirectory($folderPath);
         }
     }
@@ -122,7 +122,7 @@ class Distributor
     public function addFolder(AfterFolderAddedEvent $event): void
     {
         $folderPath = $event->getFolder()->getPublicUrl();
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             $connection->createDirectory($folderPath);
         }
     }
@@ -132,7 +132,7 @@ class Distributor
     {
         $fullFilePath = $file->getForLocalProcessing(false);
         $relativePath = PathUtility::stripPathSitePrefix($fullFilePath);
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']?? null) as $connection) {
             $connection->write('/' . ltrim($relativePath, '/'), $file->getContents());
         }
     }
@@ -141,14 +141,14 @@ class Distributor
     {
         $fullFilePath = $file->getForLocalProcessing(false);
         $relativePath = PathUtility::stripPathSitePrefix($fullFilePath);
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             $connection->delete('/' . ltrim($relativePath, '/'));
         }
     }
 
     protected function moveResourceInRemotes(string $from, string $target): void
     {
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             if ($connection->fileExists($from)) {
                 $connection->move($from, $target);
             }
