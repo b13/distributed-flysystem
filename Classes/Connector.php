@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,6 @@ use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 class Connector
 {
-
     /**
      * @param string|null $excludeNode
      * @return Filesystem[]
@@ -67,7 +67,7 @@ class Connector
         }
     }
 
-    protected function getAllConfigurations()
+    protected function getAllConfigurations(): array
     {
         $configurations = [];
         foreach ($GLOBALS['TYPO3_CONF_VARS']['FILE']['flysystem']['nodes'] ?? [] as $nodeName => $configuration) {

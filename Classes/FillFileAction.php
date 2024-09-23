@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -39,7 +40,7 @@ class FillFileAction
     {
         $requestedFile = $request->getAttribute('normalizedParams')->getSiteScript();
         $requestedFile = $this->checkRequestedFileName($requestedFile);
-        if (strpos($requestedFile, '?') !== false) {
+        if (str_contains($requestedFile, '?')) {
             [$requestedFile] = explode($requestedFile, '?');
         }
         $absoluteFile = Environment::getPublicPath() . '/' . $requestedFile;
@@ -67,7 +68,7 @@ class FillFileAction
         } catch (\Throwable $e) {
             // Ensure not throw an PHP error when serving a non-existant file
         }
-        return (new Response)->withStatus(404);
+        return (new Response())->withStatus(404);
     }
 
     protected function persistFile($targetPath, $contents, $lastModified)
@@ -97,7 +98,7 @@ class FillFileAction
     protected function checkRequestedFileName(string $originalFileName): string
     {
         // Remove a possible query string
-        if (strpos($originalFileName, '?') !== false) {
+        if (str_contains($originalFileName, '?')) {
             [$originalFileName] = explode('?', $originalFileName);
         }
         $originalBaseFileName = basename($originalFileName);
