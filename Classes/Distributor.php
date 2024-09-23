@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,14 +16,14 @@ use TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileContentsSetEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileCopiedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileCreatedEvent;
-use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileMovedEvent;
-use TYPO3\CMS\Core\Resource\Event\BeforeFileRenamedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileReplacedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderAddedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderCopiedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderMovedEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFolderRenamedEvent;
+use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
+use TYPO3\CMS\Core\Resource\Event\BeforeFileRenamedEvent;
 use TYPO3\CMS\Core\Resource\Event\BeforeFolderDeletedEvent;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -126,7 +127,6 @@ class Distributor
             $connection->createDirectory($folderPath);
         }
     }
-
 
     protected function writeFileToRemotes(FileInterface $file): void
     {
