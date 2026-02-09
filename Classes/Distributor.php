@@ -132,7 +132,7 @@ class Distributor
     {
         $fullFilePath = $file->getForLocalProcessing(false);
         $relativePath = PathUtility::stripPathSitePrefix($fullFilePath);
-        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR']?? null) as $connection) {
+        foreach ($this->connector->getConnections($_SERVER['SERVER_ADDR'] ?? null) as $connection) {
             $connection->write('/' . ltrim($relativePath, '/'), $file->getContents());
         }
     }
